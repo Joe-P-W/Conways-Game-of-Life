@@ -6,30 +6,35 @@ class Board:
         self.transformations = [[1, 0], [0, 1], [-1, 0], [0, -1], [-1, -1], [1, 1], [-1, 1], [1, -1]]
         self.unoccupied_neighbours = self._calculate_unoccupied_neighbours()
         self.new_cells = []
+        self.wait_counter = 0
 
     def update_cells(self):
 
-        set_of_cells = set(self.cells)
+        if self.wait_counter == 10:
+            set_of_cells = set(self.cells)
 
-        for cell in self.cells:
-            number_of_adjacent_cells = 0
-            for transformation in self.transformations:
-                if (cell[0] + transformation[0], cell[1] + transformation[1]) in set_of_cells:
-                    number_of_adjacent_cells += 1
+            for cell in self.cells:
+                number_of_adjacent_cells = 0
+                for transformation in self.transformations:
+                    if (cell[0] + transformation[0], cell[1] + transformation[1]) in set_of_cells:
+                        number_of_adjacent_cells += 1
 
-            if number_of_adjacent_cells == 2 or number_of_adjacent_cells == 3:
-                self.new_cells.append(cell)
+                if number_of_adjacent_cells == 2 or number_of_adjacent_cells == 3:
+                    self.new_cells.append(cell)
 
-        for space in self.unoccupied_neighbours:
-            number_of_adjacent_cells = 0
-            for transformation in self.transformations:
-                if (space[0] + transformation[0], space[1] + transformation[1]) in set_of_cells:
-                    number_of_adjacent_cells += 1
+            for space in self.unoccupied_neighbours:
+                number_of_adjacent_cells = 0
+                for transformation in self.transformations:
+                    if (space[0] + transformation[0], space[1] + transformation[1]) in set_of_cells:
+                        number_of_adjacent_cells += 1
 
-            if space not in set(self.new_cells) and number_of_adjacent_cells == 3:
-                self.new_cells.append(space)
+                if space not in set(self.new_cells) and number_of_adjacent_cells == 3:
+                    self.new_cells.append(space)
 
-        self.__init__(self.new_cells)
+            self.__init__(self.new_cells)
+
+        else:
+            self.wait_counter += 1
 
     def _calculate_unoccupied_neighbours(self):
         unoccupied_neighbours = []
