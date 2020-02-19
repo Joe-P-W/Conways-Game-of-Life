@@ -5,8 +5,8 @@ import pygame
 from board import Board
 
 pygame.init()
-resolution = (600, 600)
-squares = 20
+resolution = (900, 900)
+squares = 30
 screen = pygame.display.set_mode(resolution)
 initialising_board = True
 button_down = False
@@ -184,4 +184,4 @@ while True:
 
     pygame.display.flip()
     board.update_cells()
-    time.sleep(0.05)
+    time.sleep(1/60)
