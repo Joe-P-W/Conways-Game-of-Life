@@ -11,8 +11,8 @@
 | Arrow Keys | Move around
 | Enter | Starts the simulation 
 | r | Resets the board
-| shift + S | Save the current state of the board as a *.json
-| shift + L | Loads a board state from a *.json
+| shift + S | Save the current state of the board as a *.json (may need to click back on the board)
+| shift + L | Loads a board state from a *.json (may need to click back on the board)
 
 
 ### In simulation:
@@ -21,7 +21,7 @@
 | Mouse Wheel | Zooms in and out
 | Arrow Keys | Move around
 | Escape | Resets the board to original state
-| r | Restarts the board from the original state
+| r | Restarts the simulation from the original board state
 
 
 ## Requirements
