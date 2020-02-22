@@ -27,7 +27,7 @@ class TestBoard(unittest.TestCase):
 
     def test_one_board_update(self):
         assertion_board = [(1, 2), (2, 1), (3, 2), (2, 3), (1, 3), (3, 3), (3, 1), (1, 1)]
-        self.board.update_cells()
+        next(self.board)
 
         self._validate_board_updates(assertion_board)
 
@@ -35,13 +35,13 @@ class TestBoard(unittest.TestCase):
         assertion_board = [(1, 3), (3, 3), (3, 1), (1, 1), (2, 0), (2, 4), (4, 2), (0, 2)]
 
         for _ in range(2):
-            self.board.update_cells()
+            next(self.board)
 
         self._validate_board_updates(assertion_board)
 
     def test_arbitrarily_large_number_of_board_updates(self):
         for _ in range(random.randint(20, 50)):
-            self.board.update_cells()
+            next(self.board)
 
         self._validate_board_updates(None)
 

@@ -22,6 +22,8 @@
 | Arrow Keys | Move around
 | Escape | Resets the board to original state
 | r | Restarts the simulation from the original board state
+| = | Increases simulation speed
+| - | Slows simulation speed
 
 
 ## Requirements
