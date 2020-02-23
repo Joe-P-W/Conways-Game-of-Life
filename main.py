@@ -181,16 +181,16 @@ def check_initialisation_events(board, _screen, _resolution, _squares, cell_x_si
         board += square
 
     if move_up:
-        board + (0, -1)
+        board.translate(0, -1)
         time.sleep(0.01)
     if move_down:
-        board + (0, 1)
+        board.translate(0, 1)
         time.sleep(0.01)
     if move_left:
-        board + (-1, 0)
+        board.translate(-1, 0)
         time.sleep(0.01)
     if move_right:
-        board + (1, 0)
+        board.translate(1, 0)
         time.sleep(0.01)
 
     return board, _screen, _resolution, _squares, cell_x_size, cell_y_size, \
@@ -253,13 +253,13 @@ def check_simulation_events(board: Board, move_up, move_down, move_left, move_ri
                 move_right = False
 
     if move_up:
-        board + (0, -1)
+        board.translate(0, -1)
     if move_down:
-        board + (0, 1)
+        board.translate(0, 1)
     if move_left:
-        board + (-1, 0)
+        board.translate(-1, 0)
     if move_right:
-        board + (1, 0)
+        board.translate(1, 0)
 
     return board, _squares, move_up, move_down, move_left, move_right, simulation_time, None
 

@@ -3,66 +3,78 @@
 class Board:
     def __init__(self, starting_cells: list):
         self.cells = starting_cells
-        self.unoccupied_neighbours = self[1]
-        self.new_cells = []
+        self.unoccupied_neighbours = abs(self)
 
     def __next__(self):
-        set_of_cells = set(self.cells)
-        _transformations = {(1, 0), (0, 1), (-1, 0), (0, -1), (-1, -1), (1, 1), (-1, 1), (1, -1)}
+        _transformations = [(1, 0), (0, 1), (-1, 0), (0, -1), (-1, -1), (1, 1), (-1, 1), (1, -1)]
+        new_cells = []
+        set_cells = set(self.cells)
 
-        for cell in self.cells:
+        for cell in self:
             number_of_adjacent_cells = 0
             for transformation in _transformations:
-                if (cell[0] + transformation[0], cell[1] + transformation[1]) in set_of_cells:
+                if (cell[0] + transformation[0], cell[1] + transformation[1]) in set_cells:
                     number_of_adjacent_cells += 1
 
             if number_of_adjacent_cells == 2 or number_of_adjacent_cells == 3:
-                self.new_cells.append(cell)
+                new_cells.append(cell)
 
         for space in self.unoccupied_neighbours:
             number_of_adjacent_cells = 0
             for transformation in _transformations:
-                if (space[0] + transformation[0], space[1] + transformation[1]) in set_of_cells:
+                if (space[0] + transformation[0], space[1] + transformation[1]) in set_cells:
                     number_of_adjacent_cells += 1
 
-            if space not in set(self.new_cells) and number_of_adjacent_cells == 3:
-                self.new_cells.append(space)
+            if space not in set_cells and number_of_adjacent_cells == 3:
+                new_cells.append(space)
 
-        self.__init__(self.new_cells)
+        self.__init__(new_cells)
 
     def __getitem__(self, item):
-        unoccupied_neighbours = []
-        _transformations = {
-            (item, 0), (0, item), (-item, 0), (0, -item), (-item, -item), (item, item), (-item, item), (item, -item)
-        }
-        set_of_cells = set(self.cells)
-        for cell in self.cells:
-            for transformation in _transformations:
-                if (cell[0] + transformation[0], cell[1] + transformation[1]) not in set_of_cells:
-                    unoccupied_neighbours.append((cell[0] + transformation[0], cell[1] + transformation[1]))
-
-        return list(set(unoccupied_neighbours))
-
-    def __add__(self, other):
-        self.cells = [(cell[0] + other[0], cell[1] + other[1]) for cell in self.cells]
-        self.unoccupied_neighbours = [(cell[0] + other[0], cell[1] + other[1]) for cell in self.unoccupied_neighbours]
+        return self.cells[item]
 
     def __len__(self):
         return len(self.cells)
 
     def __iadd__(self, other):
-        if other not in set(self.cells):
+        if other not in self:
             self.cells.append(other)
 
         return self
 
     def __isub__(self, other):
-        if other in self.cells:
+        if other in self:
             self.cells.remove(other)
 
         return self
 
+    def __contains__(self, item):
+        if item in set(self.cells):
+            return True
+        else:
+            return False
+
+    def __iter__(self):
+        return iter(self.cells)
+
+    def __abs__(self):
+        unoccupied_neighbours = []
+        _transformations = [
+            (1, 0), (0, 1), (-1, 0), (0, -1), (-1, -1), (1, 1), (-1, 1), (1, -1)
+        ]
+
+        for cell in self:
+            for transformation in _transformations:
+                space = (cell[0] + transformation[0], cell[1] + transformation[1])
+                if space not in self.cells:
+                    unoccupied_neighbours.append(space)
+
+        return list(set(unoccupied_neighbours))
+
     def absolute_position(self, _resolution, cell_x_size, cell_y_size, _squares):
 
         return [((cell[0] / _squares) * _resolution[0], (cell[1] / _squares) * _resolution[0], cell_x_size, cell_y_size)
-                for cell in self.cells]
+                for cell in self]
+
+    def translate(self, delta_x, delta_y):
+        self.__init__([(cell[0] + delta_x, cell[1] + delta_y) for cell in self])
