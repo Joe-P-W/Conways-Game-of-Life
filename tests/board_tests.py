@@ -40,7 +40,7 @@ class TestBoard(unittest.TestCase):
         self._validate_board_updates(assertion_board)
 
     def test_arbitrarily_large_number_of_board_updates(self):
-        for _ in range(random.randint(20, 50)):
+        for _ in range(100):
             next(self.board)
 
         self._validate_board_updates(None)
