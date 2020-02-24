@@ -1,5 +1,3 @@
-
-
 class Board:
     def __init__(self, starting_cells: list, _resolution: tuple, _squares: int):
         self.cells = starting_cells

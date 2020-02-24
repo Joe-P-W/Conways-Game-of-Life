@@ -192,6 +192,7 @@ def check_initialisation_events(board, _screen, just_out_of_tkinter_window,
 
 
 def check_simulation_events(board: Board, move_up, move_down, move_left, move_right, simulation_time):
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
