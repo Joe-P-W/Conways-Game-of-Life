@@ -78,4 +78,11 @@ class Board:
         return set(unoccupied_neighbours)
 
     def translate(self, delta_x, delta_y):
-        self.__init__([(cell[0] + delta_x, cell[1] + delta_y) for cell in self], self.resolution, self.squares)
+        self.__init__([(cell_x + delta_x, cell_y + delta_y) for cell_x, cell_y in self], self.resolution, self.squares)
+
+    def zoom(self, direction):
+        self.squares += direction
+        if self.squares < 2:
+            self.squares = 2
+
+        self.__init__(self.cells, self.resolution, self.squares + direction)

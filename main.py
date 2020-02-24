@@ -94,12 +94,10 @@ def check_initialisation_events(board, _screen, just_out_of_tkinter_window,
                 board -= square
 
             elif event.button == 4:
-                board.squares -= 1
-                if board.squares < 2:
-                    board.squares = 2
+                board.zoom(-1)
 
             elif event.button == 5:
-                board.squares += 1
+                board.zoom(1)
 
         elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             button_down = False
@@ -198,12 +196,10 @@ def check_simulation_events(board: Board, move_up, move_down, move_left, move_ri
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 4:
-                board.squares -= 1
-                if board.squares < 2:
-                    board.squares = 2
+                board.zoom(-1)
 
             elif event.button == 5:
-                board.squares += 1
+                board.zoom(1)
 
         elif event.type == pygame.KEYDOWN:
 

@@ -42,6 +42,10 @@ class TestBoard(unittest.TestCase):
     #     self._validate_board_updates(assertion_board)
 
     def test_arbitrarily_large_number_of_board_updates(self):
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
         for _ in range(1000):
             next(self.board)
 
