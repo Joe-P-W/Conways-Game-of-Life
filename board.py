@@ -1,3 +1,4 @@
+
 class Board:
     def __init__(self, starting_cells: list, _resolution: tuple, _squares: int):
         self.cells = starting_cells
@@ -61,17 +62,14 @@ class Board:
 
     def __abs__(self):
 
-        return [((cell[0] / self.squares) * self.resolution[0], (cell[1] / self.squares) * self.resolution[0],
-                 self.cell_x_size, self.cell_y_size) for cell in self]
+        return [((cell_x / self.squares) * self.resolution[0], (cell_y / self.squares) * self.resolution[0],
+                self.cell_x_size, self.cell_y_size) for cell_x, cell_y in self]
 
     def neighbours(self):
-        unoccupied_neighbours = []
-
-        for cell in self:
-            for transformation in self._transformations:
-                space = (cell[0] + transformation[0], cell[1] + transformation[1])
-                if space not in self.cells:
-                    unoccupied_neighbours.append(space)
+        unoccupied_neighbours = [(cell_x + delta_x, cell_y + delta_y)
+                                 for cell_x, cell_y in self
+                                 for delta_x, delta_y in self._transformations
+                                 if (cell_x + delta_x, cell_y + delta_y) not in self.cells]
 
         return set(unoccupied_neighbours)
 
@@ -85,4 +83,3 @@ class Board:
 
         self.cell_x_size = self.resolution[0] / self.squares
         self.cell_y_size = self.resolution[1] / self.squares
-

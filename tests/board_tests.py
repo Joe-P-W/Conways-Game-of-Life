@@ -24,8 +24,8 @@ class TestBoard(unittest.TestCase):
         for cell in self.board._unoccupied_neighbours:
             self._assert_true(cell not in self.board.cells,
                               f"{cell} in both living and unoccupied cell lists")
-    #
-    #     self._assert_true(len(self.board.cells) == len(set(self.board.cells)), "Living cells list not unique")
+
+            self._assert_true(len(self.board.cells) == len(set(self.board.cells)), "Living cells list not unique")
     #
     # def test_one_board_update(self):
     #     assertion_board = [(1, 2), (2, 1), (3, 2), (2, 3), (1, 3), (3, 3), (3, 1), (1, 1)]
@@ -51,7 +51,7 @@ class TestBoard(unittest.TestCase):
     def _validate_board_updates(self, assertion_board):
 
         if assertion_board is not None:
-            for cell in self.board.cells:
+            for cell in self.board:
                 self._assert_true(cell in assertion_board,
                                   f"{cell} from the board not in the assertion data: {assertion_board}")
 
