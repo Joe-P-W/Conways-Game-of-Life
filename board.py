@@ -83,4 +83,6 @@ class Board:
         if self.squares < 2:
             self.squares = 2
 
-        self.__init__(self.cells, self.resolution, self.squares + direction)
+        self.cell_x_size = self.resolution[0] / self.squares
+        self.cell_y_size = self.resolution[1] / self.squares
+
