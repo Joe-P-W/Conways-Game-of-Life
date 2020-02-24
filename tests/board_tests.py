@@ -10,18 +10,18 @@ class TestBoard(unittest.TestCase):
         with open("saved_starts/glider_gun.json", "r") as test_file:
             test_cells = [tuple(cell) for cell in json.load(test_file)["start_cells"]]
 
-        self.board = Board(test_cells)
+        self.board = Board(test_cells, (600, 600), 20)
 
     def test_unoccupied_cells(self):
         for cell in self.board.cells:
-            self._assert_true(cell not in self.board.unoccupied_neighbours,
+            self._assert_true(cell not in self.board._unoccupied_neighbours,
                               f"{cell} in both living and unoccupied cell lists")
 
-        self._assert_true(len(self.board.unoccupied_neighbours) == len(set(self.board.unoccupied_neighbours)),
+        self._assert_true(len(self.board._unoccupied_neighbours) == len(set(self.board._unoccupied_neighbours)),
                           "Living cells list not unique")
 
     def test_living_cells(self):
-        for cell in self.board.unoccupied_neighbours:
+        for cell in self.board._unoccupied_neighbours:
             self._assert_true(cell not in self.board.cells,
                               f"{cell} in both living and unoccupied cell lists")
     #

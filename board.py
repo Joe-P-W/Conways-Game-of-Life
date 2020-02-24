@@ -1,34 +1,38 @@
 
 
 class Board:
-    def __init__(self, starting_cells: list):
+    def __init__(self, starting_cells: list, _resolution: tuple, _squares: int):
         self.cells = starting_cells
-        self.unoccupied_neighbours = abs(self)
+        self.resolution = _resolution
+        self.squares = _squares
+        self.cell_x_size = _resolution[0] / _squares
+        self.cell_y_size = _resolution[1] / _squares
+        self._transformations = [(1, 0), (0, 1), (-1, 0), (0, -1), (-1, -1), (1, 1), (-1, 1), (1, -1)]
+        self._unoccupied_neighbours = self.neighbours()
 
     def __next__(self):
-        _transformations = [(1, 0), (0, 1), (-1, 0), (0, -1), (-1, -1), (1, 1), (-1, 1), (1, -1)]
         new_cells = []
         set_cells = set(self.cells)
 
-        for cell in self:
+        for cell_x, cell_y in self:
             number_of_adjacent_cells = 0
-            for transformation in _transformations:
-                if (cell[0] + transformation[0], cell[1] + transformation[1]) in set_cells:
+            for delta_x, delta_y in self._transformations:
+                if (cell_x + delta_x, cell_y + delta_y) in set_cells:
                     number_of_adjacent_cells += 1
 
             if number_of_adjacent_cells == 2 or number_of_adjacent_cells == 3:
-                new_cells.append(cell)
+                new_cells.append((cell_x, cell_y))
 
-        for space in self.unoccupied_neighbours:
+        for space_x, space_y in self._unoccupied_neighbours:
             number_of_adjacent_cells = 0
-            for transformation in _transformations:
-                if (space[0] + transformation[0], space[1] + transformation[1]) in set_cells:
+            for delta_x, delta_y in self._transformations:
+                if (space_x + delta_x, space_y + delta_y) in set_cells:
                     number_of_adjacent_cells += 1
 
-            if space not in set_cells and number_of_adjacent_cells == 3:
-                new_cells.append(space)
+            if (space_x, space_y) not in set_cells and number_of_adjacent_cells == 3:
+                new_cells.append((space_x, space_y))
 
-        self.__init__(new_cells)
+        self.__init__(new_cells, self.resolution, self.squares)
 
     def __getitem__(self, item):
         return self.cells[item]
@@ -58,23 +62,20 @@ class Board:
         return iter(self.cells)
 
     def __abs__(self):
+
+        return [((cell[0] / self.squares) * self.resolution[0], (cell[1] / self.squares) * self.resolution[0],
+                 self.cell_x_size, self.cell_y_size) for cell in self]
+
+    def neighbours(self):
         unoccupied_neighbours = []
-        _transformations = [
-            (1, 0), (0, 1), (-1, 0), (0, -1), (-1, -1), (1, 1), (-1, 1), (1, -1)
-        ]
 
         for cell in self:
-            for transformation in _transformations:
+            for transformation in self._transformations:
                 space = (cell[0] + transformation[0], cell[1] + transformation[1])
                 if space not in self.cells:
                     unoccupied_neighbours.append(space)
 
-        return list(set(unoccupied_neighbours))
-
-    def absolute_position(self, _resolution, cell_x_size, cell_y_size, _squares):
-
-        return [((cell[0] / _squares) * _resolution[0], (cell[1] / _squares) * _resolution[0], cell_x_size, cell_y_size)
-                for cell in self]
+        return set(unoccupied_neighbours)
 
     def translate(self, delta_x, delta_y):
-        self.__init__([(cell[0] + delta_x, cell[1] + delta_y) for cell in self])
+        self.__init__([(cell[0] + delta_x, cell[1] + delta_y) for cell in self], self.resolution, self.squares)
