@@ -4,48 +4,38 @@ import time
 import pygame
 import os
 
+from typing import Tuple, Optional, List
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from board import Board
 
 
-def initialising_board(_squares, _resolution, _screen):
+def initialising_board(board, _screen):
     button_down = False
-    move_up = False
-    move_down = False
-    move_left = False
-    move_right = False
-    just_out_of_tkinter_window = False
-    board = Board([], _resolution, _squares)
+    movement = [False, False, False, False]
+    out_of_tkinter_window = False
+
     while True:
         _screen.fill((255, 255, 255))
 
-        board, _screen, just_out_of_tkinter_window, button_down, move_up, move_down, move_left, move_right = \
-            check_initialisation_events(
-                board, _screen, just_out_of_tkinter_window, button_down, move_up, move_down, move_left, move_right
-            )
+        board, _screen, out_of_tkinter_window, button_down, movement = \
+            check_initialisation_events(board, _screen, out_of_tkinter_window, button_down, movement)
 
         draw_grid(_screen, board)
-
-        abs_positions = abs(board)
-        for position in abs_positions:
+        for position in abs(board):
             pygame.draw.rect(_screen, (0, 0, 0), position)
 
         pygame.display.flip()
 
 
 def run_simulation(board, _screen):
-    move_up = False
-    move_down = False
-    move_left = False
-    move_right = False
+    movement = [False, False, False, False]
     simulation_time = 0.1
 
     while True:
         _screen.fill((255, 255, 255))
 
-        board, move_up, move_down, move_left, move_right, simulation_time, continue_flag = \
-            check_simulation_events(board, move_up, move_down, move_left, move_right, simulation_time)
+        board, movement, simulation_time, continue_flag = check_simulation_events(board, movement, simulation_time)
 
         if continue_flag is not None:
             return continue_flag
@@ -59,7 +49,7 @@ def run_simulation(board, _screen):
         next(board)
 
 
-def draw_grid(_screen, board):
+def draw_grid(_screen: pygame.Surface, board: Board) -> None:
     for i in range(int(board.resolution[0] / board.cell_x_size) + 1):
         pygame.draw.line(_screen, (128, 128, 128),
                          (i * board.cell_x_size, 0), (i * board.cell_x_size, board.resolution[1]))
@@ -69,8 +59,9 @@ def draw_grid(_screen, board):
                          (0, i * board.cell_y_size), (board.resolution[0], i * board.cell_y_size))
 
 
-def check_initialisation_events(board, _screen, just_out_of_tkinter_window,
-                                button_down, move_up, move_down, move_left, move_right):
+def check_initialisation_events(
+        board: Board, _screen: pygame.Surface, out_of_tkinter_window: bool, button_down: bool, movement: List[bool])\
+            -> Tuple[Board, pygame.Surface, bool, bool, List[bool]]:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -78,8 +69,8 @@ def check_initialisation_events(board, _screen, just_out_of_tkinter_window,
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-                if just_out_of_tkinter_window:
-                    just_out_of_tkinter_window = False
+                if out_of_tkinter_window:
+                    out_of_tkinter_window = False
                     continue
                 else:
                     button_down = True
@@ -115,29 +106,29 @@ def check_initialisation_events(board, _screen, just_out_of_tkinter_window,
                     board = Board(backup_cells, backup_res, backup_squares)
 
             elif event.key == pygame.K_UP:
-                move_up = True
+                movement[0] = True
 
             elif event.key == pygame.K_DOWN:
-                move_down = True
+                movement[1] = True
 
             elif event.key == pygame.K_LEFT:
-                move_left = True
+                movement[2] = True
 
             elif event.key == pygame.K_RIGHT:
-                move_right = True
+                movement[3] = True
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
-                move_up = False
+                movement[0] = False
 
             elif event.key == pygame.K_DOWN:
-                move_down = False
+                movement[1] = False
 
             elif event.key == pygame.K_LEFT:
-                move_left = False
+                movement[2] = False
 
             elif event.key == pygame.K_RIGHT:
-                move_right = False
+                movement[3] = False
 
             elif event.key == pygame.K_r:
                 board = Board([], board.resolution, board.squares)
@@ -152,7 +143,7 @@ def check_initialisation_events(board, _screen, just_out_of_tkinter_window,
  
                     board = Board([tuple(cell) for cell in save_json["start_cells"]], resolution, save_json["squares"])
 
-                just_out_of_tkinter_window = True
+                out_of_tkinter_window = True
 
             elif event.key == pygame.K_s and pygame.key.get_mods() & pygame.KMOD_CTRL:
                 save_json = {"squares": board.squares, "start_cells": board.cells}
@@ -163,7 +154,7 @@ def check_initialisation_events(board, _screen, just_out_of_tkinter_window,
                     with open(f"{filename.replace('.json', '')}.json", "w") as out_json:
                         json.dump(save_json, out_json)
 
-                just_out_of_tkinter_window = True
+                out_of_tkinter_window = True
 
     if button_down:
         mouse_pos = pygame.mouse.get_pos()
@@ -173,23 +164,24 @@ def check_initialisation_events(board, _screen, just_out_of_tkinter_window,
 
         board += square
 
-    if move_up:
+    if movement[0]:
         board.translate(0, -1)
         time.sleep(0.01)
-    if move_down:
+    if movement[1]:
         board.translate(0, 1)
         time.sleep(0.01)
-    if move_left:
+    if movement[2]:
         board.translate(-1, 0)
         time.sleep(0.01)
-    if move_right:
+    if movement[3]:
         board.translate(1, 0)
         time.sleep(0.01)
 
-    return board, _screen, just_out_of_tkinter_window, button_down, move_up, move_down, move_left, move_right
+    return board, _screen, out_of_tkinter_window, button_down, movement
 
 
-def check_simulation_events(board: Board, move_up, move_down, move_left, move_right, simulation_time):
+def check_simulation_events(
+        board: Board, movement: list, simulation_time: float) -> Tuple[Board, List[bool], float, Optional[bool]]:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -205,22 +197,22 @@ def check_simulation_events(board: Board, move_up, move_down, move_left, move_ri
         elif event.type == pygame.KEYDOWN:
 
             if event.key == pygame.K_UP:
-                move_up = True
+                movement[0] = True
 
             elif event.key == pygame.K_DOWN:
-                move_down = True
+                movement[1] = True
 
             elif event.key == pygame.K_LEFT:
-                move_left = True
+                movement[2] = True
 
             elif event.key == pygame.K_RIGHT:
-                move_right = True
+                movement[3] = True
 
             elif event.key == pygame.K_ESCAPE:
-                return board, move_up, move_down, move_left, move_right, simulation_time, False
+                return board, movement, simulation_time, False
 
             elif event.key == pygame.K_r:
-                return board, move_up, move_down, move_left, move_right, simulation_time, True
+                return board, movement, simulation_time, True
 
             elif event.key == pygame.K_EQUALS:
                 simulation_time -= 0.01
@@ -232,27 +224,27 @@ def check_simulation_events(board: Board, move_up, move_down, move_left, move_ri
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
-                move_up = False
+                movement[0] = False
 
             elif event.key == pygame.K_DOWN:
-                move_down = False
+                movement[1] = False
 
             elif event.key == pygame.K_LEFT:
-                move_left = False
+                movement[2] = False
 
             elif event.key == pygame.K_RIGHT:
-                move_right = False
+                movement[3] = False
 
-    if move_up:
+    if movement[0]:
         board.translate(0, -1)
-    if move_down:
+    if movement[1]:
         board.translate(0, 1)
-    if move_left:
+    if movement[2]:
         board.translate(-1, 0)
-    if move_right:
+    if movement[3]:
         board.translate(1, 0)
 
-    return board, move_up, move_down, move_left, move_right, simulation_time, None
+    return board, movement, simulation_time, None
 
 
 if __name__ == "__main__":
@@ -260,4 +252,4 @@ if __name__ == "__main__":
     resolution = (900, 900)
     squares = 30
     screen = pygame.display.set_mode(resolution)
-    initialising_board(squares, resolution, screen)
+    initialising_board(Board([], resolution, squares), screen)

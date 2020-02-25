@@ -14,7 +14,6 @@ class Board:
         self._unoccupied_neighbours = self._neighbours()
 
     def __next__(self):
-
         set_cells = set(self.cells)
         new_cells = [(cell_x, cell_y)
                      for cell_x, cell_y in self
@@ -25,7 +24,8 @@ class Board:
                       if len([True for delta_x, delta_y in self._transformations
                               if (space_x + delta_x, space_y + delta_y) in set_cells]) == 3]
 
-        self.__init__(set(new_cells), self.resolution, self.squares)
+        self.cells = set(new_cells)
+        self._unoccupied_neighbours = self._neighbours()
 
     def __getitem__(self, item):
         return self.cells[item]
@@ -46,21 +46,18 @@ class Board:
         return self
 
     def __contains__(self, item):
-        if item in set(self.cells):
-            return True
-        else:
-            return False
+        return item in set(self.cells)
 
     def __iter__(self):
         return iter(self.cells)
 
     def __abs__(self):
-
         return [((cell_x / self.squares) * self.resolution[0], (cell_y / self.squares) * self.resolution[0],
                 self.cell_x_size, self.cell_y_size) for cell_x, cell_y in self]
 
     def translate(self, delta_x, delta_y):
-        self.__init__([(cell_x + delta_x, cell_y + delta_y) for cell_x, cell_y in self], self.resolution, self.squares)
+        self.cells = [(cell_x + delta_x, cell_y + delta_y) for cell_x, cell_y in self]
+        self._unoccupied_neighbours = self._neighbours()
 
     def zoom(self, direction):
         self.squares += direction
