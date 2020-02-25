@@ -10,7 +10,7 @@ from tkinter.filedialog import askopenfilename, asksaveasfilename
 from board import Board
 
 
-def initialising_board(board, _screen):
+def initialising_board(board: Board, _screen: pygame.Surface) -> None:
     button_down = False
     movement = [False, False, False, False]
     out_of_tkinter_window = False
@@ -28,7 +28,7 @@ def initialising_board(board, _screen):
         pygame.display.flip()
 
 
-def run_simulation(board, _screen):
+def run_simulation(board: Board, _screen: pygame.Surface) -> bool:
     movement = [False, False, False, False]
     simulation_time = 0.1
 
