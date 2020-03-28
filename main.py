@@ -131,7 +131,7 @@ def check_initialisation_events(
                 movement[3] = False
 
             elif event.key == pygame.K_r:
-                board = Board([], board.resolution, board.squares)
+                board = Board(set(), board.resolution, board.squares)
 
             elif event.key == pygame.K_l and pygame.key.get_mods() & pygame.KMOD_CTRL:
                 Tk().withdraw()
@@ -141,7 +141,7 @@ def check_initialisation_events(
                     with open(filename, "r") as in_json:
                         save_json = json.load(in_json)
  
-                    board = Board([tuple(cell) for cell in save_json["start_cells"]], resolution, save_json["squares"])
+                    board = Board(set(tuple(cell) for cell in save_json["start_cells"]), resolution, save_json["squares"])
 
                 out_of_tkinter_window = True
 
@@ -252,4 +252,4 @@ if __name__ == "__main__":
     resolution = (900, 900)
     squares = 30
     screen = pygame.display.set_mode(resolution)
-    initialising_board(Board([], resolution, squares), screen)
+    initialising_board(Board(set(), resolution, squares), screen)
