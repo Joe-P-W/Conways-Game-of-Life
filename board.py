@@ -68,11 +68,11 @@ class Board:
 
 
 if __name__ == "__main__":
-    with open("saved_starts/glider_gun.json", "r") as test_file:
+    with open("saved_starts/big_start.json", "r") as test_file:
         test_cells = {tuple(cell) for cell in json.load(test_file)["start_cells"]}
 
     board = Board(test_cells, (600, 600), 20)
-    iterations = 2000
+    iterations = 100
     t1 = time.time()
     for _ in range(iterations):
         next(board)

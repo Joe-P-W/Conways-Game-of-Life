@@ -1,5 +1,4 @@
 import json
-import random
 import unittest
 
 from board import Board
