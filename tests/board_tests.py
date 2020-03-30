@@ -7,7 +7,7 @@ from board import Board
 
 class TestBoard(unittest.TestCase):
     def setUp(self) -> None:
-        with open("../saved_starts/simple_start.json", "r") as test_file:
+        with open("saved_starts/simple_start.json", "r") as test_file:
             test_cells = {(int(cell[0]), int(cell[1]))
                           for cell in json.load(test_file)["start_cells"]}
 
