@@ -29,12 +29,6 @@ class Board:
         self.cells = new_cells
         self._unoccupied_neighbours = +self
 
-    def __getitem__(self, item):
-        return list(self.cells)[item]
-
-    def __len__(self):
-        return len(self.cells)
-
     def __iadd__(self, other):
         self.cells.add(other)
 
