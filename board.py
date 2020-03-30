@@ -4,8 +4,7 @@ from typing import Set, Tuple, Union
 
 
 class Board:
-    def __init__(self, starting_cells: Set[Tuple[Union[int, float], Union[int, float]]],
-                 _resolution: Tuple[int, int], _squares: int):
+    def __init__(self, starting_cells: Set[Tuple[int, int]], _resolution: Tuple[int, int], _squares: int):
         self.cells = starting_cells
         self.resolution = _resolution
         self.squares = _squares
