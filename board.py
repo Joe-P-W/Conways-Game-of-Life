@@ -46,8 +46,8 @@ class Board:
         return iter(self.cells)
 
     def __abs__(self):
-        return [((cell_x / self.squares) * self.resolution[0], (cell_y / self.squares) * self.resolution[0],
-                self.cell_x_size, self.cell_y_size) for cell_x, cell_y in self]
+        return {((cell_x / self.squares) * self.resolution[0], (cell_y / self.squares) * self.resolution[0],
+                self.cell_x_size, self.cell_y_size) for cell_x, cell_y in self}
 
     def __pos__(self):
         return {(cell_x + delta_x, cell_y + delta_y)
@@ -56,7 +56,7 @@ class Board:
                 if (cell_x + delta_x, cell_y + delta_y) not in self.cells}
 
     def translate(self, delta_x, delta_y):
-        self.cells = [(cell_x + delta_x, cell_y + delta_y) for cell_x, cell_y in self]
+        self.cells = {(cell_x + delta_x, cell_y + delta_y) for cell_x, cell_y in self}
         self._unoccupied_neighbours = +self
 
     def zoom(self, direction):
