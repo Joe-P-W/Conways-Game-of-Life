@@ -146,7 +146,7 @@ def check_initialisation_events(
                 out_of_tkinter_window = True
 
             elif event.key == pygame.K_s and pygame.key.get_mods() & pygame.KMOD_CTRL:
-                save_json = {"squares": board.squares, "start_cells": board.cells}
+                save_json = {"squares": board.squares, "start_cells": list(board.cells)}
                 Tk().withdraw()
                 filename = asksaveasfilename(initialdir=f"{os.getcwd()}/saved_starts",
                                              filetypes=[("Json", '*.json')])

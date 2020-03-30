@@ -7,8 +7,9 @@ from board import Board
 
 class TestBoard(unittest.TestCase):
     def setUp(self) -> None:
-        with open("saved_starts/glider_gun.json", "r") as test_file:
-            test_cells = [tuple(cell) for cell in json.load(test_file)["start_cells"]]
+        with open("../saved_starts/simple_start.json", "r") as test_file:
+            test_cells = {(int(cell[0]), int(cell[1]))
+                          for cell in json.load(test_file)["start_cells"]}
 
         self.board = Board(test_cells, (600, 600), 20)
 
@@ -26,20 +27,20 @@ class TestBoard(unittest.TestCase):
                               f"{cell} in both living and unoccupied cell lists")
 
             self._assert_true(len(self.board.cells) == len(set(self.board.cells)), "Living cells list not unique")
-    #
-    # def test_one_board_update(self):
-    #     assertion_board = [(1, 2), (2, 1), (3, 2), (2, 3), (1, 3), (3, 3), (3, 1), (1, 1)]
-    #     next(self.board)
-    #
-    #     self._validate_board_updates(assertion_board)
-    #
-    # def test_two_board_updates(self):
-    #     assertion_board = [(1, 3), (3, 3), (3, 1), (1, 1), (2, 0), (2, 4), (4, 2), (0, 2)]
-    #
-    #     for _ in range(2):
-    #         next(self.board)
-    #
-    #     self._validate_board_updates(assertion_board)
+
+    def test_one_board_update(self):
+        assertion_board = [(1, 2), (2, 1), (3, 2), (2, 3), (1, 3), (3, 3), (3, 1), (1, 1)]
+        next(self.board)
+
+        self._validate_board_updates(assertion_board)
+
+    def test_two_board_updates(self):
+        assertion_board = [(1, 3), (3, 3), (3, 1), (1, 1), (2, 0), (2, 4), (4, 2), (0, 2)]
+
+        for _ in range(2):
+            next(self.board)
+
+        self._validate_board_updates(assertion_board)
 
     def test_arbitrarily_large_number_of_board_updates(self):
         for _ in range(1000):
