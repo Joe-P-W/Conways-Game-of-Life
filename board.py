@@ -41,8 +41,7 @@ class Board:
         return self
 
     def __isub__(self, other):
-        if other in self:
-            self.cells.remove(other)
+        self.cells.discard(other)
 
         return self
 
